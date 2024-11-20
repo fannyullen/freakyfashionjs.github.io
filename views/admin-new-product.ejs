@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/admin.css">
+    <title>Administration</title>
+    <script src="/javascripts/new-product.js" defer></script>
+</head>
+<body>
+    <header>
+        <h3>
+            <a href="/admin" id="admin">Administration</a>
+        </h3>
+    </header>
+    <main>
+        <section>
+            <aside>
+                <h5>Produkter</h5>
+            </aside>
+            <div>
+                <div>
+                    <div class="items">
+                        <h4><%= title %></h4>
+                    </div>
+                </div>
+                <form>
+                    <p>
+                        <label for="productName">Namn:</label><br>
+                        <input type="text" name="productName" required><br><br>
+
+                        <label for="description">Beskrivning:</label><br>
+                        <textarea id="description" placeholder="Ange beskrivning"></textarea><br><br>
+
+                        <label for="image">Bild</label><br>
+                        <input class="file" type="text" name="image" required><br><br>
+
+                        <label for="SKU">SKU</label><br>
+                        <input type="text" name="SKU" placeholder="Ange SKU"
+                        pattern="[a-zA-Z]{3}[0-9]{3}" required><br><br>
+                        
+                        <label for="productPrice">Pris</label><br>
+                        <input type="text" name="productPrice" required><br><br>
+
+                        <button class="btn" type="submit">Lägg till</button>
+                    </p>
+                </form>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

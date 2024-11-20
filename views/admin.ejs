@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration</title>
+    <link rel="stylesheet" href="/stylesheets/admin.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script src="/javascripts/admin.js" defer></script>
+</head>
+<body>
+    <header>
+        <h3><%= title %></h3>
+    </header>
+    <main>
+        <section>
+            <aside>
+                <h5>Produkter</h5>
+            </aside>
+            <div>
+                <div class="items">
+                    <h4>Produkter</h4>
+                    <div class="product-btn-2">Ladda produkter</div>
+                    <div class="product-btn"><a href="/new/product">Ny produkt</a></div>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Namn</th>
+                            <th>SKU</th>
+                            <th>Pris</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr>
+                            <td> genereras dynamiskt <td>
+                            </tr> -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
