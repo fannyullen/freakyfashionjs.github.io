@@ -45,6 +45,7 @@ a {
     height: 25px;
     box-shadow: 2px 2px 2px gray;
     border-radius: 10px;
+    cursor: pointer;
 }
 button {
     border-radius: 10px;

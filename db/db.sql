@@ -3,7 +3,8 @@ CREATE TABLE products (
     product_name TEXT,
     SKU TEXT UNIQUE,
     product_price TEXT,
-    image TEXT
+    image TEXT,
+    urlSlug TEXT UNIQUE
 );
 
 DROP TABLE products;
@@ -12,7 +13,8 @@ INSERT INTO products (
     product_name,
     SKU,
     product_price,
-    image
+    image,
+    urlSlug
 ) VALUES (
     'Svart t-shirt',
     'AA111',

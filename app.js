@@ -28,19 +28,20 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// GET /products/:id (dynamisk route)
-app.get('/products/:id', function(req, res) {
+// GET /products/:urlSlug (dynamisk route)
+app.get('/products/:urlSlug', function(req, res) {
 
-  const id = req.params.id;
+  const urlSlug = req.params.urlSlug;
 
   const row = db.prepare(`
-    SELECT id, 
+    SELECT id,
       product_name as productName,
       product_price as productPrice,
-      image
+      image,
+      urlSlug
     FROM products
-    WHERE id = ?
-    `).get(id);
+    WHERE urlSlug = ?
+    `).get(urlSlug);
 
     res.render("product-details", {
       title: `${row.productName}`,
@@ -57,29 +58,47 @@ app.get("/admin", function(req, res) {
 
 // GET /admin-new-product
 app.get("/new/product", function(req, res) { // GET-anrop, när man söker på sökvägen /new/product så körs funktionen
+  
   res.render("admin-new-product", { // ejs.sidan med detta namn renderas
     title: "Ny produkt" // dynamisk text som kan användas på ejs-sidan (innanför tags)
   });
 });
 
 // POST /admin-new-product
-
+// En funktion som kommer köras/anropas när det kommer in ett POST-anrop
+// där URL:en är /new/products
 app.post("/new/product", function (req, res) { // FETCH API, POST-anrop till backend, lägger till data från sidan till databasen
+
+  const generateSlug = str =>
+    str
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '');
   
-  const product = { // här har vi skapat ett objekt över vår produkt
-    productName: req.body.productName, // request
-    SKU: req.body.SKU,
+  const product = { // här har vi skapat ett objekt för vår produkt
+    productName: req.body.productName, // req-objekt som står för request
+    SKU: req.body.SKU, // body innehåller informationen som skickades från klienten
     productPrice: req.body.productPrice,
-    image: req.body.image
+    image: req.body.image,
+    urlSlug: generateSlug(req.body.productName)
   };
 
-  // förbereder databasen
+  // prepare: förbereder databasen att lagra informationen i databasen
+  // här lägger vi till data till databasen genom SQL-kommandot INSERT INTO
   db.prepare(`
-    INSERT INTO products (product_name, SKU, product_price, image)
-    VALUES (@productName, @SKU, @productPrice, @image)
-    `).run(product); // här lägger vi till data till databasen genom INSERT INTO
+    INSERT INTO products (product_name, SKU, product_price, image, urlSlug)
+    VALUES (@productName, @SKU, @productPrice, @image, @urlSlug)
+    `).run(product);
 
-    res.status(201).end();
+    // statuskod 201, en statuskod man returneras när något nytt har skapats 
+    // upp på servern
+    // instruera webbläsaren att hämta registreringssidan på nytt
+    
+    res.redirect("/admin");
+
+    res.status(201).end(); 
 });
 
 // GET /api/products (JSON-format)
@@ -115,3 +134,15 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+// funktion som behövs för att generera urlSlug
+// tar in en textsträng som kommer vara titeln
+
+/* function generateSlug(title) {
+  return title
+      .toLowerCase()                    // Convert to lowercase
+      .trim()                           // Tar bort mellanslag och white spaces före och efter
+      .replace(/[^a-z0-9\s-]/g, '')     // Ersätter specialtecken med giltiga tecken
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '');
+} */

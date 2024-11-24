@@ -320,6 +320,9 @@ input:hover {
 .btn-1:hover {
     background-color: hsla(16, 95%, 85%, 0.859);
 }
+.active, .accordion:hover {
+    background-color: #ccc;
+}
 
 /* breakpoint */
 
