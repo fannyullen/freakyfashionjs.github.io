@@ -184,18 +184,28 @@
     </footer>
 
     <template id="product-card-template">
-        <article class="slideshow-card">
-            <a href="/products/<%= product.urlSlug %>" class="link">
-            <img src="<%= product.image %>" alt="T-shirt">
-            <div class="product-details-2">
-                <h5><%= product.productName %></h5>
-                <h5><%= product.productPrice %> SEK</h5>
-            </div>
-            </a>
-        </article>
+        <% products.forEach(product => { %>
+            <article class="slideshow-card">
+                <a href="/products/<%= product.urlSlug %>" class="link">
+
+                    <img src="<%= product.image %>" alt="">
+                    <div class="heart">
+                        <i class="bi bi-suit-heart"></i>
+                    </div>
+
+                    <div class="product-details-2">
+                        <h4><%= product.productName %></h4>
+
+                        <%= product.productPrice %> SEK
+                    </div>
+                </a>
+            </article>
+        <% }) %>
     </template>
 
     <script>
+
+        // klona produktkort
         const template = document.querySelector("#product-card-template");
 
         const slide = document.querySelector(".slideshow-container > div");

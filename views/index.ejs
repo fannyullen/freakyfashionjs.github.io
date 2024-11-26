@@ -204,10 +204,15 @@
         // for-loop
         for (i = 0; i < acc.length; i++) {
 
+            // adding an eventListener, when the accordion button is clicked
+            // the following function is executed. 
             acc[i].addEventListener("click", function() {
                 
                 // Toggle between adding and removing the "active" class,
                 // to highlight the button that controls the panel
+                
+                // Toggle: Skiftar mellan att lägga till och ta bort active-klassen
+                // så att accordion öppnas och stängs
                 this.classList.toggle("active");
 
                 // Toggle between hiding and showing the active panel

@@ -2,9 +2,13 @@
 
 const button = document.querySelector(".product-btn-2");
 
+const tableRow = document.querySelector(".tr");
+
 button.addEventListener("click", function (event) {
     event.preventDefault();
     
+    tableRow.style.display = "none";
+
     fetch("/api/products") // med FETCH API så hämtas informationen om produkterna från databasen
     .then(resp => resp.json())
     .then(products => {
@@ -45,5 +49,4 @@ button.addEventListener("click", function (event) {
         table.appendChild(tdPrice);
     }
     });
-
 });

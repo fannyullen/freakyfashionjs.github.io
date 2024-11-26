@@ -31,6 +31,7 @@ app.use('/users', usersRouter);
 // GET /products/:urlSlug (dynamisk route)
 app.get('/products/:urlSlug', function(req, res) {
 
+  // generera urlSlug
   const urlSlug = req.params.urlSlug;
 
   const row = db.prepare(`
@@ -43,10 +44,26 @@ app.get('/products/:urlSlug', function(req, res) {
     WHERE urlSlug = ?
     `).get(urlSlug);
 
-    res.render("product-details", {
-      title: `${row.productName}`,
-      product: row
-    });
+    // hämta produktkort från backend
+    const select = db.prepare(`
+      SELECT id,
+            product_name as productName,
+            product_price as productPrice,
+            image,
+            urlSlug
+        FROM products
+      `);
+  
+      const products = select.all();
+  
+      const viewData = {
+        title: `${row.productName}`, 
+        products: products,
+        product: row
+      };
+    
+      // Här renderar/genererar vi filen product-details.ejs
+      res.render('product-details', viewData);
 });
 
 // GET /admin
@@ -65,10 +82,12 @@ app.get("/new/product", function(req, res) { // GET-anrop, när man söker på s
 });
 
 // POST /admin-new-product
+// En route som tar emot post-anropet (från new/product)
 // En funktion som kommer köras/anropas när det kommer in ett POST-anrop
 // där URL:en är /new/products
 app.post("/new/product", function (req, res) { // FETCH API, POST-anrop till backend, lägger till data från sidan till databasen
 
+  // funktion för att generera en urlSlug
   const generateSlug = str =>
     str
       .toLowerCase()
