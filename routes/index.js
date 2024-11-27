@@ -25,11 +25,52 @@ router.get('/', function(req, res, next) {
 
     const products = select.all();
 
+    // Query String
+
+    const filter = req.query.filter;
+
+    console.log(req.query.filter);
+
+    // CONCAT('%', '?, '%')
+
+    let stmt;
+    let result;
+
+    if (filter) {
+      stmt = db.prepare(`
+        SELECT id,
+          product_name as productName,
+          product_price as productPrice,
+          image,
+          urlSlug
+      FROM products
+      WHERE productName LIKE CONCAT('%', ?, '%')
+        `);
+        result = stmt.all(filter);
+    } else {
+      stmt = db.prepare(`
+        SELECT id,
+          product_name as productName,
+          product_price as productPrice,
+          image,
+          urlSlug
+      FROM products
+        `);
+        result = stmt.all();
+    }
+
     const viewData = {
-      title: "Produkter", 
-      products: products
+      title: "Produkter",
+      products: products,
+      products: result,
+      /* product: row */
     };
-  
+
+    /* const viewData = {
+      title: "Produkter",
+      products: products
+    }; */
+
     // Här renderar/hämtar vi filen index.ejs
     res.render('index', viewData);
 });

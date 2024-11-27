@@ -24,11 +24,11 @@
                 </p>
             </div>
             <br>
-            <form action="/search/result"> <!-- för VG behöver du ha med action -->
+            <form action="search-result.ejs"> <!-- för VG behöver du ha med action -->
                 <input class="search-bar" name="filter" type="search" placeholder="search" title="search">
             </form>
         </div>
-        <br>
+        <br><br>
         <nav>
             <div class="menu">
                 <div><a class="link" href="/">Hem</a></div>
@@ -48,40 +48,36 @@
                 </div>
                 <div><a class="link" href="#">REA</a></div>
             </div>
+            <br>
         </nav>
     </header>
 
     <main>
 
-        <article class="product-details">
-            <div class="product-card">
-                <img src="<%= product.image %>" alt="T-shirt">
-            </div>
+        <!-- <section class="product">
             <div>
-                <h2><%= title %></h2>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi incidunt illum veniam aperiam perferendis deserunt quisquam. Aut, autem adipisci corporis minus doloribus, necessitatibus optio sint magnam quia consequatur porro obcaecati.</p>
-                <div>
-                    <%= product.productPrice %> SEK
-                </div>
-                <button type="submit" class="btn-1">Lägg i varukorg</button>
+                Generera produktkort dynamiskt från backend
             </div>
-        </article>
+          </section> -->
 
-        <h2 class="product-title">Liknande produkter</h2>
-        <section class="slideshow-container">
-            <article class="prev-btn">
-                <i class="bi bi-caret-left"></i>
-            </article>
-
-            <section class="slideshow-container">
-                <div class="slideshow-track">
-                    <!-- Generera produktkort dynamiskt från backend -->
+        <section class="search-result">
+            <% products.forEach(product => { %>
+                <div class="product-card">
+                    <a href="/products/<%= product.urlSlug %>" class="link">
+    
+                        <img src="<%= product.image %>" alt="">
+                        <div class="heart-2">
+                            <i class="bi bi-suit-heart"></i>
+                        </div>
+    
+                        <div class="product-info">
+                            <h4><%= product.productName %></h4>
+    
+                            <%= product.productPrice %> SEK
+                        </div>
+                    </a>
                 </div>
-            </section>
-            
-            <article class="next-btn">
-                <i class="bi bi-caret-right"></i>
-            </article>
+            <% }) %>
         </section>
 
         <section class="container-3">
@@ -155,23 +151,6 @@
         
         <p class="copyright">&copy; Freaky Fashion</p>
     </footer>
-
-    <template id="product-card-template">
-        <% products.forEach(product => { %>
-            <article class="slideshow-card">
-                <a href="/products/<%= product.urlSlug %>" class="link">
-
-                    <img src="<%= product.image %>" alt="">
-
-                    <div class="product-details-2">
-                        <h4><%= product.productName %></h4>
-
-                        <%= product.productPrice %> SEK
-                    </div>
-                </a>
-            </article>
-        <% }) %>
-    </template>
-    <script src="/javascripts/details.js"></script>
+    <script src="/javascripts/search-result.js"></script>
 </body>
 </html>

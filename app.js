@@ -66,6 +66,81 @@ app.get('/products/:urlSlug', function(req, res) {
       res.render('product-details', viewData);
 });
 
+// GET /search-result
+// GET /?filter=ma
+app.get('/search/:urlSlug', function(req, res) {
+
+  // generera urlSlug
+  const urlSlug = req.params.urlSlug;
+
+  const row = db.prepare(`
+    SELECT id,
+      product_name as productName,
+      product_price as productPrice,
+      image,
+      urlSlug
+    FROM products
+    WHERE urlSlug = ?
+    `).get(urlSlug);
+
+    // hämta produktkort från backend
+    const select = db.prepare(`
+      SELECT id,
+            product_name as productName,
+            product_price as productPrice,
+            image,
+            urlSlug
+        FROM products
+      `);
+  
+      const products = select.all();
+
+      // Query String
+
+      const filter = req.query.filter;
+
+      console.log(req.query.filter);
+
+      // CONCAT('%', '?, '%')
+
+      let stmt;
+      let result;
+
+      if (filter) {
+        stmt = db.prepare(`
+          SELECT id,
+            product_name as productName,
+            product_price as productPrice,
+            image,
+            urlSlug
+        FROM products
+        WHERE productName LIKE CONCAT('%', ?, '%')
+          `);
+          result = stmt.all(filter);
+      } else {
+        stmt = db.prepare(`
+          SELECT id,
+            product_name as productName,
+            product_price as productPrice,
+            image,
+            urlSlug
+        FROM products
+          `);
+          result = stmt.all();
+      }
+
+      const viewData = {
+        /* title: `${row.productName}` */
+        products: products,
+        products: result,
+        product: row
+      };
+    
+      // Här renderar/genererar vi filen product-details.ejs
+      res.render('search-result', viewData);
+});
+
+
 // GET /admin
 app.get("/admin", function(req, res) {
   res.render("admin", {
@@ -74,18 +149,36 @@ app.get("/admin", function(req, res) {
 });
 
 // GET /admin-new-product
-app.get("/new/product", function(req, res) { // GET-anrop, när man söker på sökvägen /new/product så körs funktionen
+app.get("/admin/new", function(req, res) { // GET-anrop, när man söker på sökvägen /new/product så körs funktionen
   
   res.render("admin-new-product", { // ejs.sidan med detta namn renderas
     title: "Ny produkt" // dynamisk text som kan användas på ejs-sidan (innanför tags)
   });
 });
 
+// GET /api/products (JSON-format)
+// API endpoint
+app.get('/api/products', function(req, res, next) {
+
+  const products = db
+    .prepare(`
+      SELECT id,
+        product_name AS productName,
+        SKU AS SKU,
+        product_price AS productPrice,
+        image AS image
+      FROM products
+      `).all();
+
+  res.json(products);
+});
+
 // POST /admin-new-product
+// API endpoint
 // En route som tar emot post-anropet (från new/product)
 // En funktion som kommer köras/anropas när det kommer in ett POST-anrop
-// där URL:en är /new/products
-app.post("/new/product", function (req, res) { // FETCH API, POST-anrop till backend, lägger till data från sidan till databasen
+// där URL:en är /admin/new
+  app.post("/admin/new", function (req, res, next) { // FETCH API, POST-anrop till backend, lägger till data från sidan till databasen
 
   // funktion för att generera en urlSlug
   const generateSlug = str =>
@@ -115,25 +208,9 @@ app.post("/new/product", function (req, res) { // FETCH API, POST-anrop till bac
     // upp på servern
     // instruera webbläsaren att hämta registreringssidan på nytt
     
-    res.redirect("/admin");
-
-    res.status(201).end(); 
-});
-
-// GET /api/products (JSON-format)
-app.get('/api/products', function(req, res, next) {
-
-  const products = db
-    .prepare(`
-      SELECT id,
-        product_name AS productName,
-        SKU AS SKU,
-        product_price AS productPrice,
-        image AS image
-      FROM products
-      `).all();
-
-  res.json(products);
+    // Returnerar statuskod 201 Created - indikerar för klienten att resurser har skapats
+    // Returnerar detaljer om produkten
+    res.status(201).end();
 });
 
 // catch 404 and forward to error handler

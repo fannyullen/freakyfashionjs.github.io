@@ -38,6 +38,8 @@ img {
 .menu {
     display: flex;
     justify-content: space-evenly;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 .menu > div {
     padding: 10px;
@@ -122,6 +124,12 @@ aside {
     position: absolute;
     font-size: 1.5rem;
     bottom: 120px;
+    right: 30px;
+}
+.heart-2 {
+    position: absolute;
+    font-size: 1.5rem;
+    bottom: 60px;
     right: 30px;
 }
 .link {
@@ -275,6 +283,10 @@ legend {
 .submit {
     margin: 20px;
 }
+.search-result {
+    display: grid;
+    grid-template-columns: 1fr;
+}
 #name {
     width: 400px;
 }
@@ -312,6 +324,9 @@ input:hover {
  background-color: hsl(16, 95%, 85%);
 }
 .heart:hover {
+    transform: scale(1.2);
+}
+.heart-2:hover {
     transform: scale(1.2);
 }
 .drop-btn:hover .dropdown-content {
@@ -375,6 +390,10 @@ input:hover {
     .register {
         visibility: hidden;
         display: none;
+    }
+    .search-result {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
     #name {
         max-width: 400px;
@@ -465,5 +484,9 @@ input:hover {
         display: grid;
         grid-template-columns: 1fr 1fr;
         margin: 10px;
+    }
+    .search-result {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 }

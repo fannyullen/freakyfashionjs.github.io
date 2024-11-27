@@ -26,7 +26,7 @@ form.addEventListener("submit", function (event) {
     
     // Skickar datan från frontend till backend (i JSON-format) med inbyggda
     // funktionen Fetch (API). 
-    fetch("/new/product", { // skickar ett anrop till /new/product (POST: /new/product)
+    fetch("/admin/new", { // skickar ett anrop till /admin/new (POST: /new/product)
         // HTTP-metod som ska användas
         // till skillnad från tidigare när vi använt GET för att hämta information, så använder vi nu metoden POST (för att skicka information)
         // Vi berättar här att metoden som ska användas ska vara POST
@@ -39,9 +39,17 @@ form.addEventListener("submit", function (event) {
             "Content-Type": "application/json"
         },
 
+        // Skapar en JSON-representatoin av objektet - JSON
+                // är en textsträng som är formaterad på ett speciellt sätt, 
+                // ett sätt som gör det enkelt för backend att återställa
+                // den till ett objekt där.
+
         // JSON.stringify() skapar en JSON-formaterad text-sträng
         // som sedan skickas till backend
         body: JSON.stringify(product)
         // body-delen av anropet: är en del av http-anropet som håller information som ska skickas till backend i detta fall
+    }).then(resp => {
+        // När vi får svar från backend körs denna koden
+        location.href = "/admin";
     });
 });
