@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-// GET /products/:urlSlug (dynamisk route)
+// GET /products/:urlSlug
 app.get('/products/:urlSlug', function(req, res) {
 
   // generera urlSlug
@@ -44,7 +44,6 @@ app.get('/products/:urlSlug', function(req, res) {
     WHERE urlSlug = ?
     `).get(urlSlug);
 
-    // hämta produktkort från backend
     const select = db.prepare(`
       SELECT id,
             product_name as productName,
@@ -62,15 +61,12 @@ app.get('/products/:urlSlug', function(req, res) {
         product: row
       };
     
-      // Här renderar/genererar vi filen product-details.ejs
       res.render('product-details', viewData);
 });
 
 // GET /search-result
-// GET /?filter=ma
 app.get('/search/:urlSlug', function(req, res) {
 
-  // generera urlSlug
   const urlSlug = req.params.urlSlug;
 
   const row = db.prepare(`
@@ -83,7 +79,6 @@ app.get('/search/:urlSlug', function(req, res) {
     WHERE urlSlug = ?
     `).get(urlSlug);
 
-    // hämta produktkort från backend
     const select = db.prepare(`
       SELECT id,
             product_name as productName,
@@ -136,7 +131,6 @@ app.get('/search/:urlSlug', function(req, res) {
         product: row
       };
     
-      // Här renderar/genererar vi filen product-details.ejs
       res.render('search-result', viewData);
 });
 
@@ -149,14 +143,14 @@ app.get("/admin", function(req, res) {
 });
 
 // GET /admin-new-product
-app.get("/admin/new", function(req, res) { // GET-anrop, när man söker på sökvägen /new/product så körs funktionen
+app.get("/admin/new", function(req, res) {
   
-  res.render("admin-new-product", { // ejs.sidan med detta namn renderas
-    title: "Ny produkt" // dynamisk text som kan användas på ejs-sidan (innanför tags)
+  res.render("admin-new-product", {
+    title: "Ny produkt"
   });
 });
 
-// GET /api/products (JSON-format)
+// GET /api/products
 // API endpoint
 app.get('/api/products', function(req, res, next) {
 
@@ -174,13 +168,8 @@ app.get('/api/products', function(req, res, next) {
 });
 
 // POST /admin-new-product
-// API endpoint
-// En route som tar emot post-anropet (från new/product)
-// En funktion som kommer köras/anropas när det kommer in ett POST-anrop
-// där URL:en är /admin/new
-  app.post("/admin/new", function (req, res, next) { // FETCH API, POST-anrop till backend, lägger till data från sidan till databasen
+  app.post("/admin/new", function (req, res, next) {
 
-  // funktion för att generera en urlSlug
   const generateSlug = str =>
     str
       .toLowerCase()
@@ -189,27 +178,19 @@ app.get('/api/products', function(req, res, next) {
       .replace(/[\s_-]+/g, '-')
       .replace(/^-+|-+$/g, '');
   
-  const product = { // här har vi skapat ett objekt för vår produkt
-    productName: req.body.productName, // req-objekt som står för request
-    SKU: req.body.SKU, // body innehåller informationen som skickades från klienten
+  const product = {
+    productName: req.body.productName,
+    SKU: req.body.SKU,
     productPrice: req.body.productPrice,
     image: req.body.image,
     urlSlug: generateSlug(req.body.productName)
   };
 
-  // prepare: förbereder databasen att lagra informationen i databasen
-  // här lägger vi till data till databasen genom SQL-kommandot INSERT INTO
   db.prepare(`
     INSERT INTO products (product_name, SKU, product_price, image, urlSlug)
     VALUES (@productName, @SKU, @productPrice, @image, @urlSlug)
     `).run(product);
 
-    // statuskod 201, en statuskod man returneras när något nytt har skapats 
-    // upp på servern
-    // instruera webbläsaren att hämta registreringssidan på nytt
-    
-    // Returnerar statuskod 201 Created - indikerar för klienten att resurser har skapats
-    // Returnerar detaljer om produkten
     res.status(201).end();
 });
 
