@@ -151,7 +151,6 @@ app.get("/admin/new", function(req, res) {
 });
 
 // GET /api/products
-// API endpoint
 app.get('/api/products', function(req, res, next) {
 
   const products = db
@@ -211,15 +210,3 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
-
-// funktion som behövs för att generera urlSlug
-// tar in en textsträng som kommer vara titeln
-
-/* function generateSlug(title) {
-  return title
-      .toLowerCase()                    // Convert to lowercase
-      .trim()                           // Tar bort mellanslag och white spaces före och efter
-      .replace(/[^a-z0-9\s-]/g, '')     // Ersätter specialtecken med giltiga tecken
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '');
-} */
